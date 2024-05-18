@@ -1,11 +1,5 @@
 import { relations } from 'drizzle-orm';
-import {
-  integer,
-  pgTable,
-  text,
-  timestamp,
-  varchar,
-} from 'drizzle-orm/pg-core';
+import { integer, pgTable, timestamp, varchar } from 'drizzle-orm/pg-core';
 
 // Tasks schema & relations
 export const tasks = pgTable('tasks', {
@@ -93,9 +87,6 @@ export const masterImportanceLevels = pgTable('master_importance_level', {
   description: varchar('description', { length: 255 }).notNull(),
 });
 
-export const masterImportanceLevelsRelations = relations(
-  masterImportanceLevels,
-  ({ many }) => ({
-    tasks: many(tasks),
-  })
-);
+export const masterImportanceLevelsRelations = relations(masterImportanceLevels, ({ many }) => ({
+  tasks: many(tasks),
+}));
