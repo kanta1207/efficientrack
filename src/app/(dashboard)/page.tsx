@@ -1,10 +1,10 @@
-import Image from 'next/image';
+import { UserButton } from '@clerk/nextjs';
 
 export default function Home() {
   return (
     <div>
       <h1>Authenticated route</h1>
-      <Image src="/logo.svg" alt="Vercel Logo" width={72} height={16} />
+      <UserButton afterSignOutUrl="/" />
     </div>
   );
 }
