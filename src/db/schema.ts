@@ -79,8 +79,8 @@ export const masterSizesRelations = relations(masterSizes, ({ many }) => ({
   tasks: many(tasks),
 }));
 
-// MasterImportanceLevels schema & relations
-export const masterImportanceLevels = pgTable('master_importance_level', {
+// masterPriorityLevelsschema & relations
+export const masterPriorityLevels = pgTable('master_importance_level', {
   id: integer('id').primaryKey(),
   createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
   name: varchar('name', { length: 255 }).notNull(),
