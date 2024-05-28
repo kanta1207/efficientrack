@@ -1,5 +1,3 @@
-import { ClerkLoaded, ClerkLoading, SignUp } from '@clerk/nextjs';
-import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
 export default function Page() {
   return (
@@ -11,14 +9,7 @@ export default function Page() {
             Log in to create account or sign in to existing account.
           </p>
         </div>
-        <div className="mt-8 flex items-center justify-center">
-          <ClerkLoaded>
-            <SignUp path="/sign-up" />
-          </ClerkLoaded>
-          <ClerkLoading>
-            <Loader2 className="animate-spin text-muted-foreground" />
-          </ClerkLoading>
-        </div>
+        <div className="mt-8 flex items-center justify-center"></div>
       </div>
       <div className="hidden h-full lg:flex lg:items-center lg:justify-center">
         <Image src="/logo.svg" height={100} width={100} alt="logo" />
