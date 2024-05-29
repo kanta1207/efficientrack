@@ -3,13 +3,16 @@ import { integer, pgTable, timestamp } from 'drizzle-orm/pg-core';
 
 import { locations } from './locations';
 import { tasks } from './tasks';
+import { users } from './users';
 
 export const taskSessions = pgTable('task_sessions', {
   id: integer('id').primaryKey(),
   createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
   startedAt: timestamp('started_at', { mode: 'date' }).notNull(),
   endedAt: timestamp('ended_at', { mode: 'date' }),
-  userId: integer('user_id').notNull(),
+  userId: integer('user_Id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
   taskId: integer('task_id').notNull(),
   locationId: integer('location_id'),
 });

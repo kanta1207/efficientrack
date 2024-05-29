@@ -16,7 +16,7 @@ export const tasks = pgTable('tasks', {
   description: varchar('description', { length: 255 }).notNull(),
   deadline: timestamp('deadline', { mode: 'date' }).notNull(),
   completedPercentage: integer('completed_percentage').notNull(),
-  userId: integer('userId')
+  userId: integer('user_Id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   sizeId: integer('size_id').notNull(),
