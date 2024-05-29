@@ -1,11 +1,13 @@
 // tasks.ts
 import { relations } from 'drizzle-orm';
 import { integer, pgTable, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { createInsertSchema } from 'drizzle-zod';
 
 import { categories } from './categories';
 import { masterTaskPriorityLevels } from './master_task_priority_levels';
 import { masterTaskSizes } from './master_task_sizes';
 import { taskSessions } from './task_sessions';
+import { users } from './users';
 
 export const tasks = pgTable('tasks', {
   id: integer('id').primaryKey(),
@@ -14,7 +16,9 @@ export const tasks = pgTable('tasks', {
   description: varchar('description', { length: 255 }).notNull(),
   deadline: timestamp('deadline', { mode: 'date' }).notNull(),
   completedPercentage: integer('completed_percentage').notNull(),
-  userId: integer('user_id').notNull(),
+  userId: integer('userId')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
   sizeId: integer('size_id').notNull(),
   priorityLevelsId: integer('importance_level_id').notNull(),
 });
@@ -31,3 +35,5 @@ export const tasksRelations = relations(tasks, ({ one, many }) => ({
   taskSessions: many(taskSessions),
   categories: many(categories),
 }));
+
+export const insertTaskSchema = createInsertSchema(tasks);
