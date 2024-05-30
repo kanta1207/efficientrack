@@ -10,7 +10,7 @@ export const taskSessions = pgTable('task_sessions', {
   createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
   startedAt: timestamp('started_at', { mode: 'date' }).notNull(),
   endedAt: timestamp('ended_at', { mode: 'date' }),
-  userId: integer('user_Id')
+  userId: integer('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   taskId: integer('task_id').notNull(),

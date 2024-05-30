@@ -8,7 +8,7 @@ export const locations = pgTable('locations', {
   id: integer('id').primaryKey(),
   createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
   name: varchar('name', { length: 255 }).notNull(),
-  userId: integer('user_Id')
+  userId: integer('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
 });
