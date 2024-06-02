@@ -1,4 +1,3 @@
-// tasks.ts
 import { relations } from 'drizzle-orm';
 import { integer, pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
@@ -36,4 +35,6 @@ export const tasksRelations = relations(tasks, ({ one, many }) => ({
   categories: many(categories),
 }));
 
+export type Task = typeof tasks.$inferSelect & typeof tasksRelations.table.$inferSelect;
+export type InsertTask = typeof tasks.$inferInsert;
 export const insertTaskSchema = createInsertSchema(tasks);
