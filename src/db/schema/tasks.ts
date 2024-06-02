@@ -1,13 +1,9 @@
 // tasks.ts
 import { relations } from 'drizzle-orm';
-import { integer, pgTable, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { integer, pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
-import { categories } from './categories';
-import { masterTaskPriorityLevels } from './master_task_priority_levels';
-import { masterTaskSizes } from './master_task_sizes';
-import { taskSessions } from './task_sessions';
-import { users } from './users';
+import { categories, masterTaskPriorityLevels, masterTaskSizes, taskSessions, users } from './';
 
 export const tasks = pgTable('tasks', {
   id: integer('id').primaryKey(),
@@ -16,7 +12,7 @@ export const tasks = pgTable('tasks', {
   description: varchar('description', { length: 255 }).notNull(),
   deadline: timestamp('deadline', { mode: 'date' }).notNull(),
   completedPercentage: integer('completed_percentage').notNull(),
-  userId: integer('user_id')
+  userId: text('userId')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   sizeId: integer('size_id').notNull(),
@@ -24,6 +20,10 @@ export const tasks = pgTable('tasks', {
 });
 
 export const tasksRelations = relations(tasks, ({ one, many }) => ({
+  user: one(users, {
+    fields: [tasks.userId],
+    references: [users.id],
+  }),
   priorityLevel: one(masterTaskPriorityLevels, {
     fields: [tasks.priorityLevelsId],
     references: [masterTaskPriorityLevels.id],

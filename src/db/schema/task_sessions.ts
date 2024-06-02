@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm';
-import { integer, pgTable, timestamp } from 'drizzle-orm/pg-core';
+import { integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 import { locations } from './locations';
 import { tasks } from './tasks';
@@ -10,7 +10,7 @@ export const taskSessions = pgTable('task_sessions', {
   createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
   startedAt: timestamp('started_at', { mode: 'date' }).notNull(),
   endedAt: timestamp('ended_at', { mode: 'date' }),
-  userId: integer('user_id')
+  userId: text('userId')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   taskId: integer('task_id').notNull(),
@@ -18,6 +18,10 @@ export const taskSessions = pgTable('task_sessions', {
 });
 
 export const taskSessionsRelations = relations(taskSessions, ({ one }) => ({
+  user: one(users, {
+    fields: [taskSessions.userId],
+    references: [users.id],
+  }),
   task: one(tasks, {
     fields: [taskSessions.taskId],
     references: [tasks.id],

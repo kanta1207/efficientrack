@@ -1,8 +1,14 @@
-import { integer, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core';
+import { boolean, integer, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core';
 import type { AdapterAccountType } from 'next-auth/adapters';
 
+// This schema files are based on the example I found in https://authjs.dev/getting-started/adapters/drizzle#schemas
+// There are some inconsistencies of camel or snake cases, but it didn't work when I tried to change it. so I left it as it is.
+// It's mentioned in this issue https://github.com/nextauthjs/next-auth/issues/8271
+
 export const users = pgTable('user', {
-  id: integer('id').primaryKey(),
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   name: text('name'),
   email: text('email').notNull(),
   emailVerified: timestamp('emailVerified', { mode: 'date' }),
@@ -12,7 +18,7 @@ export const users = pgTable('user', {
 export const accounts = pgTable(
   'account',
   {
-    userId: integer('user_id')
+    userId: text('userId')
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
     type: text('type').$type<AdapterAccountType>().notNull(),
@@ -35,7 +41,7 @@ export const accounts = pgTable(
 
 export const sessions = pgTable('session', {
   sessionToken: text('sessionToken').primaryKey(),
-  userId: integer('user_id')
+  userId: text('userId')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   expires: timestamp('expires', { mode: 'date' }).notNull(),
@@ -48,7 +54,30 @@ export const verificationTokens = pgTable(
     token: text('token').notNull(),
     expires: timestamp('expires', { mode: 'date' }).notNull(),
   },
-  (vt) => ({
-    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+  (verficationToken) => ({
+    compositePk: primaryKey({
+      columns: [verficationToken.identifier, verficationToken.token],
+    }),
+  })
+);
+
+export const authenticators = pgTable(
+  'authenticator',
+  {
+    credentialID: text('credentialID').notNull().unique(),
+    userId: text('userId')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    providerAccountId: text('providerAccountId').notNull(),
+    credentialPublicKey: text('credentialPublicKey').notNull(),
+    counter: integer('counter').notNull(),
+    credentialDeviceType: text('credentialDeviceType').notNull(),
+    credentialBackedUp: boolean('credentialBackedUp').notNull(),
+    transports: text('transports'),
+  },
+  (authenticator) => ({
+    compositePK: primaryKey({
+      columns: [authenticator.userId, authenticator.credentialID],
+    }),
   })
 );
