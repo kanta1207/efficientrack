@@ -6,9 +6,9 @@ import { taskRoutes } from './(tasks)/tasks.routes';
 export const runtime = 'edge';
 
 const app = new Hono().basePath('/api');
-app.route('/tasks', taskRoutes);
+const appRoutes = app.route('/tasks', taskRoutes);
 
-export type AppType = typeof app;
+export type AppType = typeof appRoutes;
 
 export const GET = handle(app);
 export const POST = handle(app);

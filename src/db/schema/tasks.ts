@@ -37,4 +37,7 @@ export const tasksRelations = relations(tasks, ({ one, many }) => ({
 
 export type Task = typeof tasks.$inferSelect & typeof tasksRelations.table.$inferSelect;
 export type InsertTask = typeof tasks.$inferInsert;
+export type UpdateTask = Partial<InsertTask>;
+
 export const insertTaskSchema = createInsertSchema(tasks);
+export const updateTaskSchema = insertTaskSchema.partial().omit({ id: true, userId: true });
