@@ -1,7 +1,6 @@
 import { relations } from 'drizzle-orm';
 import { integer, pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core';
 
-import { tasks } from './tasks';
 import { users } from './users';
 
 export const categories = pgTable('categories', {
@@ -13,10 +12,9 @@ export const categories = pgTable('categories', {
     .references(() => users.id, { onDelete: 'cascade' }),
 });
 
-export const categoriesRelations = relations(categories, ({ one, many }) => ({
+export const categoriesRelations = relations(categories, ({ one }) => ({
   user: one(users, {
     fields: [categories.userId],
     references: [users.id],
   }),
-  tasks: many(tasks),
 }));

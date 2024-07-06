@@ -9,13 +9,15 @@ import {
   tasks,
 } from '../schema';
 import { UpdateTask } from '../schema/tasks';
+import { tasksToCategories } from '../schema/tasks-to-categories';
 
 export const taskRepository = {
   async createTask(db: DatabaseContext, task: InsertTask) {
     await db.insert(tasks).values(task);
   },
+
   async findById(db: DatabaseContext, id: number) {
-    return db
+    const rows = await db
       .select({
         id: tasks.id,
         createdAt: tasks.createdAt,
@@ -40,10 +42,15 @@ export const taskRepository = {
       .from(tasks)
       .leftJoin(masterTaskSizes, eq(tasks.sizeId, masterTaskSizes.id))
       .leftJoin(masterTaskPriorityLevels, eq(tasks.priorityLevelsId, masterTaskPriorityLevels.id))
+      .leftJoin(tasksToCategories, eq(tasksToCategories.taskId, tasks.id))
+      .leftJoin(categories, eq(tasksToCategories.categoryId, categories.id))
       .where(eq(tasks.id, id));
+
+    return rows ? rows[0] : null;
   },
+
   async findByUserId(db: DatabaseContext, userId: string) {
-    return db
+    return await db
       .select({
         id: tasks.id,
         createdAt: tasks.createdAt,
@@ -68,11 +75,15 @@ export const taskRepository = {
       .from(tasks)
       .leftJoin(masterTaskSizes, eq(tasks.sizeId, masterTaskSizes.id))
       .leftJoin(masterTaskPriorityLevels, eq(tasks.priorityLevelsId, masterTaskPriorityLevels.id))
+      .leftJoin(tasksToCategories, eq(tasksToCategories.taskId, tasks.id))
+      .leftJoin(categories, eq(tasksToCategories.categoryId, categories.id))
       .where(eq(tasks.userId, userId));
   },
+
   async updateTask(db: DatabaseContext, id: number, attr: UpdateTask) {
     await db.update(tasks).set(attr).where(eq(tasks.id, id));
   },
+
   async deleteTask(db: DatabaseContext, id: number) {
     await db.delete(tasks).where(eq(tasks.id, id));
   },

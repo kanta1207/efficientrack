@@ -2,7 +2,7 @@ import { relations } from 'drizzle-orm';
 import { integer, pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
-import { categories, masterTaskPriorityLevels, masterTaskSizes, taskSessions, users } from './';
+import { masterTaskPriorityLevels, masterTaskSizes, taskSessions, users } from './';
 
 export const tasks = pgTable('tasks', {
   id: integer('id').primaryKey(),
@@ -32,12 +32,8 @@ export const tasksRelations = relations(tasks, ({ one, many }) => ({
     references: [masterTaskSizes.id],
   }),
   taskSessions: many(taskSessions),
-  categories: many(categories),
 }));
 
 export type Task = typeof tasks.$inferSelect & typeof tasksRelations.table.$inferSelect;
 export type InsertTask = typeof tasks.$inferInsert;
 export type UpdateTask = Partial<InsertTask>;
-
-export const insertTaskSchema = createInsertSchema(tasks);
-export const updateTaskSchema = insertTaskSchema.partial().omit({ id: true, userId: true });

@@ -1,14 +1,16 @@
 import { Hono } from 'hono';
 import { handle } from 'hono/vercel';
 
-import { taskRoutes } from './(tasks)/tasks.routes';
+import { taskRoutes } from '@/server/features/tasks/routes';
 
 export const runtime = 'edge';
 
-const app = new Hono().basePath('/api');
+const app = new Hono().basePath('/api').get('/hello', async (c) => {
+  return c.json({ name: 'John Doe' });
+});
 const appRoutes = app.route('/tasks', taskRoutes);
 
-export type AppType = typeof appRoutes;
+export type ApiType = typeof appRoutes;
 
-export const GET = handle(app);
-export const POST = handle(app);
+export const GET = handle(appRoutes);
+export const POST = handle(appRoutes);

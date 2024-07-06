@@ -1,5 +1,5 @@
 {
-  "id": "0cf68dd3-b600-4b8a-afca-3b3aa88fbe6c",
+  "id": "c2410e15-524c-4a7b-8136-d6781425b1f6",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
@@ -526,6 +526,55 @@
           ]
         }
       },
+      "uniqueConstraints": {}
+    },
+    "public.tasks_to_categories": {
+      "name": "tasks_to_categories",
+      "schema": "",
+      "columns": {
+        "task_id": {
+          "name": "task_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "tasks_to_categories_task_id_tasks_id_fk": {
+          "name": "tasks_to_categories_task_id_tasks_id_fk",
+          "tableFrom": "tasks_to_categories",
+          "tableTo": "tasks",
+          "columnsFrom": [
+            "task_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "tasks_to_categories_category_id_categories_id_fk": {
+          "name": "tasks_to_categories_category_id_categories_id_fk",
+          "tableFrom": "tasks_to_categories",
+          "tableTo": "categories",
+          "columnsFrom": [
+            "category_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "public.authenticator": {
